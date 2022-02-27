@@ -1,9 +1,11 @@
 package com.matheus.mytwitter.Models;
 
+import com.matheus.mytwitter.DTOS.Models.TweetDTO;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -19,9 +21,20 @@ public class Tweet {
     @ManyToOne
     private AppUser author;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String message;
 
-    @Column(nullable = false)
-    private LocalDateTime timestamp;
+    @CreationTimestamp
+    private Timestamp createdAt;
+
+    public static TweetDTO toDTO(Tweet tweet){
+        TweetDTO tweetDTO = new TweetDTO();
+
+        tweetDTO.setMessage(tweet.getMessage());
+        tweetDTO.setAuthorUsername(tweet.getAuthor().getUsername());
+        tweetDTO.setAuthorName(tweet.getAuthor().getName());
+        tweetDTO.setCreatedAt(tweet.getCreatedAt().toLocalDateTime());
+
+        return tweetDTO;
+    }
 }

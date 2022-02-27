@@ -13,7 +13,7 @@ import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final AppUserService appUserService;

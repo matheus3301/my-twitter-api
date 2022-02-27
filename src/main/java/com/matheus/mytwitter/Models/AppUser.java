@@ -25,7 +25,7 @@ public class AppUser {
     @Column(nullable = false, unique = true)
     private String username;
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String passwordHash;
 
     public static AppUserDTO toDTO(AppUser appUser) {

@@ -1,5 +1,6 @@
 package com.matheus.mytwitter.Filters;
 
+import com.matheus.mytwitter.Exceptions.EntityNotFoundException;
 import com.matheus.mytwitter.Utils.JwtTokenUtil;
 import com.matheus.mytwitter.Services.Implementations.JwtUserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -52,6 +53,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
 //                System.out.println("JWT Token has expired");
             }catch (SignatureException e){
+
+            }catch (EntityNotFoundException e){
 
             }
 
