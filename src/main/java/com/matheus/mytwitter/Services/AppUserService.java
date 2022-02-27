@@ -13,7 +13,7 @@ public interface AppUserService {
             String password,
             String confirmPassword
     );
-    AppUser update(Long id, AppUser appUser);
+    AppUser updateProfile(String username, AppUser appUser);
     Collection<AppUser> list();
     void delete(Long id);
     AppUser get(Long id);

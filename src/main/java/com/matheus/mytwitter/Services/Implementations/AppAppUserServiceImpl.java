@@ -51,10 +51,15 @@ public class AppAppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUser update(Long id, AppUser appUser) {
+    public AppUser updateProfile(String username, AppUser appUser) {
+        AppUser original = userRepository.findByUsername(username);
 
+        original.setEmail(appUser.getEmail());
+        original.setName(appUser.getName());
+        original.setAvatarUrl(appUser.getAvatarUrl());
+        original.setBiography(appUser.getBiography());
 
-        return null;
+        return userRepository.save(original);
     }
 
     @Override

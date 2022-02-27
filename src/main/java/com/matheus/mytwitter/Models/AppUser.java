@@ -28,12 +28,18 @@ public class AppUser {
     @Column(nullable = false)
     private String passwordHash;
 
+    private String avatarUrl;
+
+    private String biography;
+
     public static AppUserDTO toDTO(AppUser appUser) {
         AppUserDTO appUserDTO = new AppUserDTO();
 
         appUserDTO.setUsername(appUser.getUsername());
         appUserDTO.setEmail(appUser.getEmail());
         appUserDTO.setName(appUser.getName());
+        appUserDTO.setAvatarUrl(appUser.getAvatarUrl());
+        appUserDTO.setBiography(appUser.getBiography());
 
         return appUserDTO;
     }
