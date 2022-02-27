@@ -1,6 +1,7 @@
-package com.matheus.mytwitter.Services;
+package com.matheus.mytwitter.Services.Implementations;
 
 import com.matheus.mytwitter.Models.AppUser;
+import com.matheus.mytwitter.Services.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,12 +12,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class JwtUserDetailsService implements UserDetailsService {
+public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     private final AppUserService appUserService;
 
     @Autowired
-    public JwtUserDetailsService(AppUserService appUserService) {
+    public JwtUserDetailsServiceImpl(AppUserService appUserService) {
         this.appUserService = appUserService;
     }
 

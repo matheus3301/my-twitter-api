@@ -1,4 +1,4 @@
-package com.matheus.mytwitter.Configurations;
+package com.matheus.mytwitter.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

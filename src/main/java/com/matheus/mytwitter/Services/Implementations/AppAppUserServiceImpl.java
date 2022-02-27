@@ -1,18 +1,16 @@
 package com.matheus.mytwitter.Services.Implementations;
 
+import com.matheus.mytwitter.Exceptions.EntityNotFoundException;
 import com.matheus.mytwitter.Exceptions.InvalidPasswordException;
 import com.matheus.mytwitter.Exceptions.PasswordDoesNotMatchException;
 import com.matheus.mytwitter.Models.AppUser;
 import com.matheus.mytwitter.Repositories.UserRepository;
 import com.matheus.mytwitter.Services.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 @Service
 public class AppAppUserServiceImpl implements AppUserService {
@@ -47,7 +45,9 @@ public class AppAppUserServiceImpl implements AppUserService {
                 this.passwordEncoder.encode(password)
         );
 
-        return userRepository.save(appUser);
+        AppUser createdAppUser = userRepository.save(appUser);
+
+        return createdAppUser;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AppAppUserServiceImpl implements AppUserService {
     @Override
     public AppUser get(Long id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.BAD_REQUEST, "This username does not exist")
+         new EntityNotFoundException("User")
         );
     }
 
@@ -80,7 +80,7 @@ public class AppAppUserServiceImpl implements AppUserService {
         AppUser appUser = userRepository.findByUsername(username);
 
         if(appUser == null)
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This username does not exist");
+            throw new EntityNotFoundException("User");
 
         return appUser;
     }

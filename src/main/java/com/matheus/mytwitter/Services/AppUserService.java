@@ -1,6 +1,7 @@
 package com.matheus.mytwitter.Services;
 
 import com.matheus.mytwitter.Models.AppUser;
+import org.postgresql.util.PSQLException;
 
 import java.util.Collection;
 

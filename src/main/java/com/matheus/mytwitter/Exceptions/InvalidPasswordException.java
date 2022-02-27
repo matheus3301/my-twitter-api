@@ -1,7 +1,10 @@
 package com.matheus.mytwitter.Exceptions;
 
-public class InvalidPasswordException extends RuntimeException{
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+public class InvalidPasswordException extends ResponseStatusException {
     public InvalidPasswordException() {
-        super("Invalid Password");
+        super(HttpStatus.BAD_REQUEST, "Invalid Password");
     }
 }
