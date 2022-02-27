@@ -5,6 +5,8 @@ import com.matheus.mytwitter.DTOS.Requests.CreateTweetRequestDTO;
 import com.matheus.mytwitter.Models.Tweet;
 import com.matheus.mytwitter.Services.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -32,5 +37,12 @@ public class TweetController {
         );
 
         return new ResponseEntity<>(tweetDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<TweetDTO>> getAllTweetsFromUser(@RequestParam() String username, Pageable pageable){
+        Page<Tweet> result = tweetService.listAllFromUsername(username, pageable);
+        Page<TweetDTO> resultDTO = result.map(Tweet::toDTO);
+        return new ResponseEntity<>(resultDTO, HttpStatus.OK);
     }
 }

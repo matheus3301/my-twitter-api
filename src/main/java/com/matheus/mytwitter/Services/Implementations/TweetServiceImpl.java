@@ -6,7 +6,11 @@ import com.matheus.mytwitter.Repositories.TweetRepository;
 import com.matheus.mytwitter.Services.AppUserService;
 import com.matheus.mytwitter.Services.TweetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class TweetServiceImpl implements TweetService {
@@ -29,5 +33,12 @@ public class TweetServiceImpl implements TweetService {
         tweet.setMessage(message);
 
         return tweetRepository.save(tweet);
+    }
+
+    @Override
+    public Page<Tweet> listAllFromUsername(String username, Pageable pageable) {
+        AppUser appUser = appUserService.get(username);
+
+        return tweetRepository.findAllByAuthor_Username(appUser.getUsername(), pageable);
     }
 }
