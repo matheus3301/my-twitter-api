@@ -26,15 +26,4 @@ public class Tweet {
 
     @CreationTimestamp
     private Timestamp createdAt;
-
-    public static TweetDTO toDTO(Tweet tweet){
-        TweetDTO tweetDTO = new TweetDTO();
-
-        tweetDTO.setMessage(tweet.getMessage());
-        tweetDTO.setAuthorUsername(tweet.getAuthor().getUsername());
-        tweetDTO.setAuthorName(tweet.getAuthor().getName());
-        tweetDTO.setCreatedAt(tweet.getCreatedAt().toLocalDateTime());
-
-        return tweetDTO;
-    }
 }

@@ -2,11 +2,9 @@ package com.matheus.mytwitter.Controllers;
 
 import com.matheus.mytwitter.DTOS.Models.TweetDTO;
 import com.matheus.mytwitter.DTOS.Requests.CreateTweetRequestDTO;
-import com.matheus.mytwitter.Models.Tweet;
 import com.matheus.mytwitter.Services.TweetService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,18 +20,21 @@ import javax.validation.Valid;
 public class TweetController {
     private final TweetService tweetService;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public TweetController(TweetService tweetService) {
+    public TweetController(TweetService tweetService, ModelMapper modelMapper) {
         this.tweetService = tweetService;
+        this.modelMapper = modelMapper;
     }
 
     @PostMapping
     public ResponseEntity<TweetDTO> create(@Valid @RequestBody CreateTweetRequestDTO createTweetRequestDTO){
         String username = ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        TweetDTO tweetDTO = Tweet.toDTO(
-                tweetService.create(username, createTweetRequestDTO.getMessage())
-        );
+        TweetDTO tweetDTO = modelMapper.map(
+                tweetService.create(username, createTweetRequestDTO.getMessage()
+                ), TweetDTO.class);
 
-        return new ResponseEntity<>(tweetDTO, HttpStatus.CREATED);
+        return ResponseEntity.created(null).body(tweetDTO);
     }
 }

@@ -68,7 +68,7 @@ public class UserController {
         AppUser authenticatedUser = appUserService.get(authenticatedUsername);
 
         Page<Tweet> result = tweetService.getTimelineFromUsername(username, page, authenticatedUser);
-        Page<TweetDTO> resultDTO = result.map(Tweet::toDTO);
+        Page<TweetDTO> resultDTO = result.map(tweet -> modelMapper.map(tweet, TweetDTO.class));
         return new ResponseEntity<>(resultDTO, HttpStatus.OK);
     }
 
@@ -106,7 +106,7 @@ public class UserController {
         AppUser authenticatedUser = appUserService.get(authenticatedUsername);
 
         Page<Tweet> result = tweetService.getTimelineFromUsername(authenticatedUsername, page, authenticatedUser);
-        Page<TweetDTO> resultDTO = result.map(Tweet::toDTO);
+        Page<TweetDTO> resultDTO = result.map(tweet -> modelMapper.map(tweet, TweetDTO.class));
         return new ResponseEntity<>(resultDTO, HttpStatus.OK);
     }
 
