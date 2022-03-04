@@ -8,5 +8,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface TweetService {
     Tweet create(String username, String message);
-    Page<Tweet> listAllFromUsername(String username, Pageable pageable);
+    Page<Tweet> getTimelineFromUsername(String username, int page, AppUser authenticatedUser);
 }

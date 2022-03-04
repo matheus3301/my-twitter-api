@@ -25,4 +25,7 @@ public class UpdateProfileRequestDTO {
 
     @NotBlank
     private String name;
+
+    @NotBlank
+    private boolean isPrivate;
 }

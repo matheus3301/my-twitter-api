@@ -1,51 +1,44 @@
 package com.matheus.mytwitter.Controllers;
 
 import com.matheus.mytwitter.DTOS.Models.AppUserDTO;
-import com.matheus.mytwitter.DTOS.Requests.SignUpRequestDTO;
+import com.matheus.mytwitter.DTOS.Models.TweetDTO;
 import com.matheus.mytwitter.DTOS.Requests.UpdateProfileRequestDTO;
 import com.matheus.mytwitter.Models.AppUser;
+import com.matheus.mytwitter.Models.Follow;
+import com.matheus.mytwitter.Models.Tweet;
 import com.matheus.mytwitter.Services.AppUserService;
+import com.matheus.mytwitter.Services.TweetService;
+import com.matheus.mytwitter.Utils.ContextUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final AppUserService appUserService;
+    private final TweetService tweetService;
+
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(AppUserService appUserService) {
+    public UserController(AppUserService appUserService, TweetService tweetService, ModelMapper modelMapper) {
         this.appUserService = appUserService;
-    }
-
-
-    @PostMapping("/signup")
-    public ResponseEntity<AppUserDTO> signUp(@Valid @RequestBody SignUpRequestDTO signUpRequestDTO){
-        AppUserDTO appUserDTO = AppUser.toDTO(
-                appUserService.signUp(
-                        signUpRequestDTO.getUsername(),
-                        signUpRequestDTO.getName(),
-                        signUpRequestDTO.getEmail(),
-                        signUpRequestDTO.getPassword(),
-                        signUpRequestDTO.getConfirmPassword()
-                )
-        );
-
-        return new ResponseEntity<>(appUserDTO, HttpStatus.CREATED);
+        this.tweetService = tweetService;
+        this.modelMapper = modelMapper;
     }
 
     @PutMapping
     public ResponseEntity<AppUserDTO> updateProfile(@Valid @RequestBody UpdateProfileRequestDTO updateProfileRequestDTO){
         AppUser appUser = new AppUser();
-        String username = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String username = ContextUtils.getAuthenticatedUsername();
 
 
         appUser.setEmail(updateProfileRequestDTO.getEmail());
@@ -53,11 +46,45 @@ public class UserController {
         appUser.setBiography(updateProfileRequestDTO.getBiography());
         appUser.setAvatarUrl(updateProfileRequestDTO.getAvatarUrl());
 
-        return new ResponseEntity<>(
-                AppUser.toDTO(
-                    appUserService.updateProfile(username, appUser)
-                ),
-                HttpStatus.OK
-        );
+        AppUser updatedAppUser = appUserService.updateProfile(username, appUser);
+        AppUserDTO updatedAppUserDTO = modelMapper.map(updatedAppUser, AppUserDTO.class);
+
+        return ResponseEntity.ok(updatedAppUserDTO);
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<AppUserDTO> getProfile(@PathVariable String username){
+        AppUser appUser = appUserService.get(username);
+        AppUserDTO appUserDTO = modelMapper.map(appUser, AppUserDTO.class);
+
+        return ResponseEntity.ok(appUserDTO);
+
+    }
+
+    @GetMapping("/{username}/timeline")
+    public ResponseEntity<Page<TweetDTO>> getTimeline(@RequestParam(name = "page", required = false, defaultValue = "0") int page, @PathVariable String username){
+        String authenticatedUsername = ContextUtils.getAuthenticatedUsername();
+        AppUser authenticatedUser = appUserService.get(authenticatedUsername);
+
+        Page<Tweet> result = tweetService.getTimelineFromUsername(username, page, authenticatedUser);
+        Page<TweetDTO> resultDTO = result.map(Tweet::toDTO);
+        return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}/followers")
+    public ResponseEntity<Page<AppUserDTO>> getFollowers(@PathVariable String username, @RequestParam(required = false, defaultValue = "0") Integer page){
+        Page<Follow> appUserPage = appUserService.getFollowers(username, page);
+        Page<AppUserDTO> appUserDTOPage = appUserPage.map(follow -> modelMapper.map(follow.getFollower(),AppUserDTO.class));
+
+        return ResponseEntity.ok(appUserDTOPage);
+    }
+
+    @GetMapping("/{username}/following")
+    public ResponseEntity<Page<AppUserDTO>> getFollowing(@PathVariable String username, @RequestParam(required = false, defaultValue = "0") Integer page){
+        Page<Follow> appUserPage = appUserService.getFollowing(username, page);
+        Page<AppUserDTO> appUserDTOPage = appUserPage.map(follow -> modelMapper.map(follow.getFollower(),AppUserDTO.class));
+
+        return ResponseEntity.ok(appUserDTOPage);
+
     }
 }

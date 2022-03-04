@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -37,12 +35,5 @@ public class TweetController {
         );
 
         return new ResponseEntity<>(tweetDTO, HttpStatus.CREATED);
-    }
-
-    @GetMapping
-    public ResponseEntity<Page<TweetDTO>> getAllTweetsFromUser(@RequestParam() String username, Pageable pageable){
-        Page<Tweet> result = tweetService.listAllFromUsername(username, pageable);
-        Page<TweetDTO> resultDTO = result.map(Tweet::toDTO);
-        return new ResponseEntity<>(resultDTO, HttpStatus.OK);
     }
 }

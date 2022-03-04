@@ -4,6 +4,7 @@ import com.matheus.mytwitter.DTOS.Models.AppUserDTO;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Getter
@@ -32,15 +33,7 @@ public class AppUser {
 
     private String biography;
 
-    public static AppUserDTO toDTO(AppUser appUser) {
-        AppUserDTO appUserDTO = new AppUserDTO();
+    @Column(columnDefinition = "boolean default false")
+    private boolean isPrivate = false;
 
-        appUserDTO.setUsername(appUser.getUsername());
-        appUserDTO.setEmail(appUser.getEmail());
-        appUserDTO.setName(appUser.getName());
-        appUserDTO.setAvatarUrl(appUser.getAvatarUrl());
-        appUserDTO.setBiography(appUser.getBiography());
-
-        return appUserDTO;
-    }
 }

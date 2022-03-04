@@ -34,9 +34,5 @@ public class AppUserDTO {
 
     private Long following = 0L;
 
-    @Autowired
-    private static final UserRepository userRepository = null;
-    public static AppUser toModel(AppUserDTO appUserDTO){
-        return userRepository.findByUsername(appUserDTO.getUsername());
-    }
+    private boolean isPrivate;
 }
