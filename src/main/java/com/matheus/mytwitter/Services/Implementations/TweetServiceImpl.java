@@ -1,7 +1,10 @@
 package com.matheus.mytwitter.Services.Implementations;
 
 import com.matheus.mytwitter.Constants.Constants;
+import com.matheus.mytwitter.Exceptions.AlreadyLikedException;
+import com.matheus.mytwitter.Exceptions.EntityNotFoundException;
 import com.matheus.mytwitter.Exceptions.NotFollowingException;
+import com.matheus.mytwitter.Exceptions.NotLikedException;
 import com.matheus.mytwitter.Models.AppUser;
 import com.matheus.mytwitter.Models.Tweet;
 import com.matheus.mytwitter.Repositories.TweetRepository;
@@ -27,6 +30,11 @@ public class TweetServiceImpl implements TweetService {
     }
 
     @Override
+    public Tweet get(Long id) {
+        return this.tweetRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Tweet"));
+    }
+
+    @Override
     public Tweet create(String username, String message) {
         AppUser appUser = appUserService.get(username);
         Tweet tweet = new Tweet();
@@ -48,4 +56,29 @@ public class TweetServiceImpl implements TweetService {
         return tweetRepository.findAllByAuthor_Username(username, pageRequest);
     }
 
+    @Override
+    public Tweet likeTweet(Long id, AppUser authenticatedUser) {
+        Tweet tweet = this.get(id);
+
+        if(!tweet.getLikedBy().add(authenticatedUser))
+            throw new AlreadyLikedException();
+
+        return tweetRepository.save(tweet);
+    }
+
+    @Override
+    public Tweet unlikeTweet(Long id, AppUser authenticatedUser) {
+        Tweet tweet = this.get(id);
+
+        if(!tweet.getLikedBy().remove(authenticatedUser))
+            throw new NotLikedException();
+
+        return tweetRepository.save(tweet);
+    }
+
+    @Override
+    public Boolean hasLikedTweet(Long id, AppUser authenticatedUser) {
+        Tweet tweet = this.get(id);
+        return tweet.getLikedBy().contains(authenticatedUser);
+    }
 }

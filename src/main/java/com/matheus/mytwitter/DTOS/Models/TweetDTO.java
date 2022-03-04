@@ -1,7 +1,5 @@
 package com.matheus.mytwitter.DTOS.Models;
 
-import com.matheus.mytwitter.Models.Tweet;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class TweetDTO {
+    private Long id;
     private String message;
     private String authorUsername;
     private String authorName;

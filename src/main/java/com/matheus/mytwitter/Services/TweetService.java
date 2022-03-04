@@ -7,6 +7,10 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface TweetService {
+    Tweet get(Long id);
     Tweet create(String username, String message);
     Page<Tweet> getTimelineFromUsername(String username, int page, AppUser authenticatedUser);
+    Tweet likeTweet(Long id, AppUser authenticatedUser);
+    Tweet unlikeTweet(Long id, AppUser authenticatedUser);
+    Boolean hasLikedTweet(Long id, AppUser authenticatedUser);
 }

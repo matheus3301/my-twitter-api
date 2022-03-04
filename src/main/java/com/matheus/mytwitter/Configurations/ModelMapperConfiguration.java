@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Component
 public class ModelMapperConfiguration {
@@ -38,6 +39,8 @@ public class ModelMapperConfiguration {
 
         Converter<Timestamp, LocalDateTime> timestampToLocalDateTime = mappingContext -> mappingContext.getSource().toLocalDateTime();
 
+        Converter<Set<AppUser>, Long> userSetToLong = mappingContext -> (long)mappingContext.getSource().size();
+
         modelMapper.createTypeMap(AppUser.class, AppUserDTO.class)
                 .addMappings(
                         mapper -> mapper.using(getUserFollowers).map(AppUser::getUsername, (dest, value) -> dest.setFollowers((Long) value))
@@ -49,6 +52,9 @@ public class ModelMapperConfiguration {
         modelMapper.createTypeMap(Tweet.class, TweetDTO.class)
                 .addMappings(
                         mapper -> mapper.using(timestampToLocalDateTime).map(Tweet::getCreatedAt, (dest, value) -> dest.setCreatedAt((LocalDateTime) value))
+                )
+                .addMappings(
+                        mapper -> mapper.using(userSetToLong).map(Tweet::getLikedBy, (dest, value) -> dest.setLikes((Long)value))
                 );
 
 

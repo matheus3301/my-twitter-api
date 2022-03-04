@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -26,4 +27,7 @@ public class Tweet {
 
     @CreationTimestamp
     private Timestamp createdAt;
+
+    @ManyToMany
+    Set<AppUser> likedBy;
 }
