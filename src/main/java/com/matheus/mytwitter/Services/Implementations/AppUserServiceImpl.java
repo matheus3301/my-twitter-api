@@ -60,6 +60,7 @@ public class AppUserServiceImpl implements AppUserService {
         original.setName(appUser.getName());
         original.setAvatarUrl(appUser.getAvatarUrl());
         original.setBiography(appUser.getBiography());
+        original.setPrivate(appUser.isPrivate());
 
         return userRepository.save(original);
     }

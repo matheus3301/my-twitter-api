@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -26,6 +27,6 @@ public class UpdateProfileRequestDTO {
     @NotBlank
     private String name;
 
-    @NotBlank
+    @NotNull
     private boolean isPrivate;
 }

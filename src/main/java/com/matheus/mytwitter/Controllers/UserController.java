@@ -35,8 +35,8 @@ public class UserController {
         this.modelMapper = modelMapper;
     }
 
-    @PutMapping
-    public ResponseEntity<AppUserDTO> updateProfile(@Valid @RequestBody UpdateProfileRequestDTO updateProfileRequestDTO){
+    @PutMapping("/me")
+    public ResponseEntity<AppUserDTO> updateMyProfile(@Valid @RequestBody UpdateProfileRequestDTO updateProfileRequestDTO){
         AppUser appUser = new AppUser();
         String username = ContextUtils.getAuthenticatedUsername();
 
@@ -45,6 +45,7 @@ public class UserController {
         appUser.setName(updateProfileRequestDTO.getName());
         appUser.setBiography(updateProfileRequestDTO.getBiography());
         appUser.setAvatarUrl(updateProfileRequestDTO.getAvatarUrl());
+        appUser.setPrivate(updateProfileRequestDTO.isPrivate());
 
         AppUser updatedAppUser = appUserService.updateProfile(username, appUser);
         AppUserDTO updatedAppUserDTO = modelMapper.map(updatedAppUser, AppUserDTO.class);
@@ -82,9 +83,52 @@ public class UserController {
     @GetMapping("/{username}/following")
     public ResponseEntity<Page<AppUserDTO>> getFollowing(@PathVariable String username, @RequestParam(required = false, defaultValue = "0") Integer page){
         Page<Follow> appUserPage = appUserService.getFollowing(username, page);
+        Page<AppUserDTO> appUserDTOPage = appUserPage.map(follow -> modelMapper.map(follow.getFollowed(),AppUserDTO.class));
+
+        return ResponseEntity.ok(appUserDTOPage);
+    }
+
+
+    @GetMapping("/me")
+    public ResponseEntity<AppUserDTO> getMyProfile(){
+        String username = ContextUtils.getAuthenticatedUsername();
+
+        AppUser appUser = appUserService.get(username);
+        AppUserDTO appUserDTO = modelMapper.map(appUser, AppUserDTO.class);
+
+        return ResponseEntity.ok(appUserDTO);
+
+    }
+
+    @GetMapping("/me/timeline")
+    public ResponseEntity<Page<TweetDTO>> getMyTimeline(@RequestParam(name = "page", required = false, defaultValue = "0") int page){
+        String authenticatedUsername = ContextUtils.getAuthenticatedUsername();
+        AppUser authenticatedUser = appUserService.get(authenticatedUsername);
+
+        Page<Tweet> result = tweetService.getTimelineFromUsername(authenticatedUsername, page, authenticatedUser);
+        Page<TweetDTO> resultDTO = result.map(Tweet::toDTO);
+        return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/me/followers")
+    public ResponseEntity<Page<AppUserDTO>> getMyFollowers(@RequestParam(required = false, defaultValue = "0") Integer page){
+        String username = ContextUtils.getAuthenticatedUsername();
+
+        Page<Follow> appUserPage = appUserService.getFollowers(username, page);
         Page<AppUserDTO> appUserDTOPage = appUserPage.map(follow -> modelMapper.map(follow.getFollower(),AppUserDTO.class));
 
         return ResponseEntity.ok(appUserDTOPage);
-
     }
+
+    @GetMapping("/me/following")
+    public ResponseEntity<Page<AppUserDTO>> getMyFollowing(@RequestParam(required = false, defaultValue = "0") Integer page){
+        String username = ContextUtils.getAuthenticatedUsername();
+
+        Page<Follow> appUserPage = appUserService.getFollowing(username, page);
+        Page<AppUserDTO> appUserDTOPage = appUserPage.map(follow -> modelMapper.map(follow.getFollowed(),AppUserDTO.class));
+
+        return ResponseEntity.ok(appUserDTOPage);
+    }
+
+
 }

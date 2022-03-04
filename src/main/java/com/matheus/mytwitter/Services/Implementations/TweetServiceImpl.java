@@ -40,7 +40,7 @@ public class TweetServiceImpl implements TweetService {
     @Override
     public Page<Tweet> getTimelineFromUsername(String username, int page, AppUser authenticatedUser) {
         AppUser profile = appUserService.get(username);
-        if(profile.isPrivate() && !appUserService.isFollowing(username, authenticatedUser.getUsername()))
+        if(profile.isPrivate() && !appUserService.isFollowing(username, authenticatedUser.getUsername()) && !username.equals(authenticatedUser.getUsername()))
             throw new NotFollowingException();
 
         PageRequest pageRequest = PageRequest.of(page, Constants.DEFAULT_PAGE_SIZE).withSort(Sort.Direction.DESC, "createdAt");
