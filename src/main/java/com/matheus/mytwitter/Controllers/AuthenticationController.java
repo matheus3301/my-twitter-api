@@ -53,7 +53,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<SignInResponseDTO> createAuthenticationToken(@RequestBody SignInRequestDTO signInRequestDTO){
+    public ResponseEntity<SignInResponseDTO> createAuthenticationToken(@Valid @RequestBody SignInRequestDTO signInRequestDTO){
         this.authenticate(
                 signInRequestDTO.getUsername(),
                 signInRequestDTO.getPassword()
