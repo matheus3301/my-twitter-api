@@ -1,5 +1,6 @@
 package com.matheus.mytwitter.Controllers;
 
+import com.matheus.mytwitter.DTOS.Models.AppUserDTO;
 import com.matheus.mytwitter.DTOS.Models.TweetDTO;
 import com.matheus.mytwitter.DTOS.Requests.CreateTweetRequestDTO;
 import com.matheus.mytwitter.Models.AppUser;
@@ -9,6 +10,7 @@ import com.matheus.mytwitter.Services.TweetService;
 import com.matheus.mytwitter.Utils.ContextUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,5 +59,11 @@ public class TweetController {
         Tweet tweet = tweetService.unlikeTweet(id, appUser);
 
         return ResponseEntity.created(null).body(modelMapper.map(tweet, TweetDTO.class));
+    }
+
+    @GetMapping("/{id}/likes")
+    public ResponseEntity<Page<AppUserDTO>> getLikes(@PathVariable String id){
+
+        return null;
     }
 }
