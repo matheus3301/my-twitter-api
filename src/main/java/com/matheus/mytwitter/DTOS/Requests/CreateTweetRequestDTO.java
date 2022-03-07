@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateTweetRequestDTO {
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "The tweet cannot be void")
+    @Size(max = 255, message = "The tweet must have just 255 characters")
     private String message;
 }

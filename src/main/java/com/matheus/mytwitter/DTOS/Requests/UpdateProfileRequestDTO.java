@@ -15,18 +15,18 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateProfileRequestDTO {
-    @URL
+    @URL(message = "Profile photo link not valid")
     private String avatarUrl;
 
     private String biography;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is a required field")
+    @Email(message = "Email not valid")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Name is a required field")
     private String name;
 
-    @NotNull
+    @NotNull(message = "Profile privacy is a required field")
     private boolean isPrivate;
 }

@@ -13,9 +13,9 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignInRequestDTO {
-    @NotBlank
+    @NotBlank(message = "Username is a required field")
     private String username;
-    @NotBlank
+    @NotBlank(message = "Password is a required field")
     @Size(min = 8, message = "The password must have at least 8 characters")
     private String password;
 }

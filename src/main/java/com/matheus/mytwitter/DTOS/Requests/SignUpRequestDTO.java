@@ -14,21 +14,21 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequestDTO {
-    @NotBlank
+    @NotBlank(message = "Name is a required field")
     private String name;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "Email is a required field")
+    @Email(message = "Email not valid")
     private String email;
 
-    @NotBlank
-    @Size(min = 8)
+    @NotBlank(message = "Password is a required field")
+    @Size(min = 8, message = "The password must have at least 8 characters")
     private String password;
 
-    @NotBlank
-    @Size(min = 8)
+    @NotBlank(message = "You must confirm your password")
+    @Size(min = 8, message = "The password confirmation must have at least 8 characters")
     private String confirmPassword;
 
-    @NotBlank
+    @NotBlank(message = "Username is a required field")
     private String username;
 }
