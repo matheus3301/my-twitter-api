@@ -16,6 +16,6 @@ public class SignInRequestDTO {
     @NotBlank
     private String username;
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, message = "The password must have at least 8 characters")
     private String password;
 }
